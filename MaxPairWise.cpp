@@ -3,10 +3,10 @@
 
 #include <iostream> //the library, make me able to do input / output operations
 #include <vector> // here i used " vector " data structure
-#include <algorithm>
+#include <algorithm> 
 // I defined " algorithm" library to be able of using " max () " function
 using namespace std;
-/* the next function : i used to get the maximum 2 elements of the vector elements and
+/* the next function : i used to get the maximum 2 elements of the vector elements and 
  then return the product of them ,
 it uses the naive algorithm at all : it's O(n^2) notation : it is bad for us */
 int MaxPairWise(const vector <int>& numbers) {
@@ -24,26 +24,29 @@ int MaxPairWise(const vector <int>& numbers) {
 }
 /* the next function : i used to get the maximum 2 elements of the vector elements and
 then return the product of them ,
-it uses modified algorithm ( better than the previous function) : it's O(2n) notation :
- because it loops the elements twice but in seperated ways, the algorithm is better for us than the last algorithm ,
+it uses modified algorithm ( better than the previous function) : it's O(2n) notation : 
+ because it loops the elements twice but in seperated ways, the algorithm is better for us than the last algorithm , 
  but we still can do better */
 int MaxPairWiseFast(const vector <int>& numbers) {
 	//defining the " product " variable with initial value of 0
-	//defining the " first","second"  variables with initial value of 0,to get the fist,second maximum values respectively
-	int first=0,second = 0, product=0;
+	//defining the " max_index1","max_index2"  variables with initial value of -1,to loop the vector safely
+	int product = 0, max_index1 = -1, max_index2 = -1;
 	int count = numbers.size(); // passing the size of vector to integer varaiable called "count"
-	// for loop to get the first maximum value of the vector
+	// for loop to get the index of the first maximum value of the vector
 	for (int i = 0; i < count; i++) {
-		first = max(first, numbers[i]);
+		if ((max_index1 == -1) || (numbers[i]>numbers[max_index1]) ){
+			max_index1 = i;
+		}
 	}
-	// for loop to get the second maximum value of the vector
+	// for loop to get the index of the second maximum in the vector and i don't want to fell in the trap of repeating numbers
 	for (int j = 0; j < count; j++) {
-		if (numbers[j]!=first){
-		second = max(second, numbers[j]);
+		if ((j!= max_index1)&&((max_index2 == -1) || (numbers[j]>numbers[max_index2]))) {
+			max_index2 = j;
+		}
 	}
 
-	}
-	product = first*second;
+	
+	product = numbers[max_index1]*numbers[max_index2];
 	return product; //returning the product after looping the vector
 
 
@@ -56,15 +59,16 @@ but we still can do better if we use sorting */
 int MaxPairWiseTheFastest(const vector <int>& numbers) {
 	//defining the " product " variable with initial value of 0
 	//defining the " first","second"  variables with initial value of 0,to get the fist,second maximum values respectively
-	int first = 0, second = 0, product = 0;
+	int first = 0, second = 0, product = 0,  i=0, temp=0;
 	int n = numbers.size();
 	// one for loop to get the first and the second maximum values of the vector
-	for (int i = 0; i < n; i++) {
-		if (numbers[i] > first) {
+	for ( ; i < n; i++) {
+		if (numbers[i] >= first) {
 			second = first;
 			first = numbers[i];
+			temp = i;
 		}
-		else if ((numbers[i] > second) && (numbers[i] < first)) {
+		else if ((numbers[i] > second) && (numbers[i] < first)&&(temp != i)) {
 			second= numbers[i]; // passing the size of vector to integer varaiable called "count"
 		}
 	}
@@ -85,7 +89,7 @@ int MaxThreeWiseTheFastestOf3objects(const vector <int>& numbers) {
 	int n = numbers.size();
 	// one for loop to get the first and the second, third maximum values of the vector
 	for (int i = 0; i < n; i++) {
-		if (numbers[i] > first) {
+		if (numbers[i] >= first) {
 			third = second;
 			second = first;
 			first = numbers[i];
@@ -96,7 +100,7 @@ int MaxThreeWiseTheFastestOf3objects(const vector <int>& numbers) {
 		}
 		else if ((numbers[i] > third) && (numbers[i] < first) && ((numbers[i] < second))) {
 			third = numbers[i];
-
+			
 		}
 	}
 	product = first*second*third;
@@ -123,8 +127,7 @@ int main()
 	cout << " the max pairwise of 2 elements of the vector using the modified way is " << MaxPairWiseFast(numbers) << endl;
 	cout << " the max pairwise of 2 elements of the vector using the fastest way is " << MaxPairWiseTheFastest(numbers) << endl;
 	cout << " the max pairwise of 3 elements of the vector using the fastest way is " << MaxThreeWiseTheFastestOf3objects(numbers) << endl;
-
+	
 	return 0;
 }
-
 
